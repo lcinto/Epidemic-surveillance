@@ -9,6 +9,26 @@ from bs4 import BeautifulSoup
 import re
 
 
+def get_conn():
+    """
+    :return: 连接，游标
+    """
+    # 创建连接
+    conn = pymysql.connect(host="127.0.0.1",
+                           user="root",
+                           password="123456",
+                           db="cov",
+                           charset="utf8")
+    # 创建游标
+    cursor = conn.cursor()  # 执行完毕返回的结果集默认以元组显示
+    return conn, cursor
+
+
+def close_conn(conn, cursor):
+    cursor.close()
+    conn.close()
+
+
 def get_tencent_data():
     """
     :return: 返回历史数据和当日详细数据
