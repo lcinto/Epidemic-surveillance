@@ -1,12 +1,33 @@
 import requests
 import pymysql
-import time, datetime
+import time
+import datetime
 import json
 import hashlib
 import traceback
 import sys
 from bs4 import BeautifulSoup
 import re
+
+
+def get_conn():
+    """
+    :return: 连接，游标
+    """
+    # 创建连接
+    conn = pymysql.connect(host="127.0.0.1",
+                           user="root",
+                           password="123456",
+                           db="cov",
+                           charset="utf8")
+    # 创建游标
+    cursor = conn.cursor()  # 执行完毕返回的结果集默认以元组显示
+    return conn, cursor
+
+
+def close_conn(conn, cursor):
+    cursor.close()
+    conn.close()
 
 
 def get_tencent_data():
@@ -24,12 +45,13 @@ def get_tencent_data():
     r_his = requests.get(url_his, headers)
     res_det = json.loads(r_det.text)  # json字符串转字典
     res_his = json.loads(r_his.text)
+    #print(r_det.text)
     data_det = res_det['data']['diseaseh5Shelf']
     data_his = res_his['data']
-
+    print(data_det)
     history = {}  # 历史数据
     for i in data_his["chinaDayList"]:
-        if (i["date"] > "04.01"):
+        if i["date"] > "04.01":
             ds = i["y"] + "." + i["date"]
             tup = time.strptime(ds, "%Y.%m.%d")
             ds = time.strftime("%Y-%m-%d", tup)  # 改变时间格式,不然插入数据库会报错，数据库是datetime类型
@@ -43,7 +65,7 @@ def get_tencent_data():
         else:
             continue
     for i in data_his["chinaDayAddList"]:
-        if (i["date"] > "04.01"):
+        if i["date"] > "04.01":
             ds = i["y"] + "." + i["date"]
             tup = time.strptime(ds, "%Y.%m.%d")
             ds = time.strftime("%Y-%m-%d", tup)
@@ -65,14 +87,94 @@ def get_tencent_data():
         province = pro_infos["name"]  # 省名
         for city_infos in pro_infos["children"]:
             city = city_infos["name"]  # 城市名
-            confirm = city_infos["total"]["confirm"]  # l累计确诊
+            confirm = city_infos["total"]["confirm"]  # 累计确诊
             confirm_add = city_infos["today"]["confirm"]  # 新增确诊
             confirm_now = city_infos["total"]["nowConfirm"]  # 现有确诊
             heal = city_infos["total"]["heal"]  # 累计治愈
             dead = city_infos["total"]["dead"]  # 累计死亡
             details.append([update_time, province, city, confirm, confirm_add, confirm_now, heal, dead])
+            # 更新时间，省，城市，确诊病例，确诊新增，现存确诊，治愈，死亡病例
     return history, details
 
 
+def get_baidu_hot():
+    """
+    :return: 返回百度疫情热搜
+    """
+    # url = "https://voice.baidu.com/act/virussearch/virussearch?from=osari_map&tab=0&infomore=1"
+    url = "https://top.baidu.com/board?tab=realtime"
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/79.0.3945.88 Safari/537.36',
+    }
+    res = requests.get(url, headers=headers)
+    # res.encoding = "gb2312"
+    html = res.text
+    soup = BeautifulSoup(html, features="html.parser")
+    kw = soup.select("div.c-single-text-ellipsis")
+    count = soup.select("div.hot-index_1Bl1a")
+    context = []
+    for i in range(len(kw)):
+        k = kw[i].text.strip()  # 移除左右空格
+        v = count[i].text.strip()
+        #         print(f"{k}{v}".replace('\n',''))
+        context.append(f"{k}{v}".replace('\n', ''))
+    return context
+
+
+def update_details():
+    """
+    更新 details 表
+    :return:
+    """
+    cursor = None
+    conn = None
+    try:
+        li = get_tencent_data()[1]  # 0 是历史数据字典,1 最新详细数据列表
+        conn, cursor = get_conn()
+        sql = "insert into details(update_time,province,city,confirm,confirm_add,confirm_now,heal,dead) " \
+              "values(%s,%s,%s,%s,%s,%s,%s,%s)"
+        sql_query = 'select %s=(select update_time from details order by id desc limit 1)'  # 对比当前最大时间戳
+        cursor.execute(sql_query, li[0][0])
+        if not cursor.fetchone()[0]:  # 判断数据是否是历史数据，如果不是，执行数据更新，
+            print(f"{time.asctime()}开始更新最新数据")
+            for item in li:
+                cursor.execute(sql, item)
+            conn.commit()  # 提交事务 update delete insert操作
+            print(f"{time.asctime()}更新最新数据完毕")
+        else:
+            print(f"{time.asctime()}已是最新数据！")
+    except:
+        traceback.print_exc()
+    finally:
+        close_conn(conn, cursor)
+
+
+def update_history():
+    """
+    更新历史数据
+    :return:
+    """
+    cursor = None
+    conn = None
+    try:
+        dic = get_tencent_data()[0]  # 0 是历史数据字典,1 最新详细数据列表
+        print(f"{time.asctime()}开始更新历史数据")
+        conn, cursor = get_conn()
+        sql = "insert into history values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        sql_query = "select confirm from history where ds=%s"
+        for k, v in dic.items():
+            # item 格式 {'2020-01-13': {'confirm': 41, 'suspect': 0, 'heal': 0, 'dead': 1}
+            if not cursor.execute(sql_query, k):  # 如果当天数据不存在，才写入
+                cursor.execute(sql, [k, v.get("confirm"), v.get("confirm_add"), v.get("confirm_now"),
+                                     v.get("suspect"), v.get("suspect_add"), v.get("heal"),
+                                     v.get("heal_add"), v.get("dead"), v.get("dead_add")])
+        conn.commit()  # 提交事务 update delete insert操作
+        print(f"{time.asctime()}历史数据更新完毕")
+    except:
+        traceback.print_exc()
+    finally:
+        close_conn(conn, cursor)
+
 get_tencent_data()
-# print(get_tencent_data())
+# print(get_baidu_hot())
