@@ -1,8 +1,12 @@
-from bs4 import BeautifulSoup
 import requests
-import json
+import pymysql
 import time, datetime
-
+import json
+import hashlib
+import traceback
+import sys
+from bs4 import BeautifulSoup
+import re
 
 def get_tencent_data():
     """
