@@ -8,14 +8,17 @@ import sys
 from bs4 import BeautifulSoup
 import re
 
+
 def get_tencent_data():
     """
     :return: 返回历史数据和当日详细数据
     """
     url_det = 'https://api.inews.qq.com/newsqa/v1/query/inner/publish/modules/list?modules=diseaseh5Shelf'
-    url_his = "https://api.inews.qq.com/newsqa/v1/query/inner/publish/modules/list?modules=chinaDayList,chinaDayAddList,nowConfirmStatis,provinceCompare"
+    url_his = "https://api.inews.qq.com/newsqa/v1/query/inner/publish/modules/list?modules=chinaDayList," \
+              "chinaDayAddList,nowConfirmStatis,provinceCompare "
     headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36 Edg/101.0.1210.32',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/101.0.4951.41 Safari/537.36 Edg/101.0.1210.32',
     }
     r_det = requests.get(url_det, headers)
     r_his = requests.get(url_his, headers)
