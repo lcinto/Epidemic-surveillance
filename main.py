@@ -58,7 +58,7 @@ def get_r1_data():
 
 @app.route("/r2")
 def get_r2_data():
-    data = utils.get_r2_data()  # 格式 (('民警抗疫一线奋战16天牺牲1037364',), ('四川再派两批医疗队1537382',)
+    data = utils.get_r2_data()
     d = []
     for i in data:
         k = i[0].rstrip(string.digits)  # 移除热搜数字
