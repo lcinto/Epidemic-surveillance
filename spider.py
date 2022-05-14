@@ -303,7 +303,6 @@ def update_risk_area():
         close_conn(conn, cursor)
 
 
-print(get_baidu_hot())
 # print(get_baidu_hot())
 if __name__ == "__main__":
     s = """请输入参数:
@@ -315,6 +314,10 @@ up_ris  更新风险表
     l = len(sys.argv)
     if l == 1:
         print(s)
+        update_history()
+        update_details()
+        update_hotsearch()
+        update_risk_area()
     else:
         order = sys.argv[1]
         if order == "up_his":
