@@ -58,7 +58,23 @@ def get_world_data():
     return worlddata
 
 
-def update_risk_area():
-    pass
+def update_worlddata():
+    cursor = None
+    conn = None
+    try:
+        context = get_world_data()
+        conn, cursor = get_conn()
+        sql = "insert into world(country,confirm,dead) " \
+              "values(%s,%s,%s)"
+        sql_query = 'select %s=(select update_time from details order by id desc limit 1)'
+        for i, j in context.items():
+            cursor.execute(sql,  [context[i].get('name'), context[i].get('confirm'), context[i].get('dead')])  # 插入数据
+        conn.commit()  # 提交事务保存数据
+        print(f"{time.asctime()}数据更新完毕")
+    except:
+        traceback.print_exc()
+    finally:
+        close_conn(conn, cursor)
 
 
+update_worlddata()

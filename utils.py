@@ -105,3 +105,14 @@ def get_r2_data():
     sql = 'select content from hotsearch order by id desc limit 30'
     res = query(sql)  # 格式 (('民警抗疫一线奋战16天牺牲 1037364',), ('四川再派两批医疗队 1537382',)
     return res
+
+def get_woldmap_data()
+    """
+    :return:  返回各国数据
+    """
+    sql = "select country,confirm，dead from world " \
+          "where update_time=(select update_time from details " \
+          "order by update_time desc limit 1) " \
+          "group by province"
+    res = query(sql)
+    return res
