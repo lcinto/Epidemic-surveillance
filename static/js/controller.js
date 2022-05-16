@@ -29,7 +29,7 @@ function  get_c1_data(){
 
 function get_c2_data() {
     $.ajax({
-        url:"/c2",
+        url:"/c",
         success: function(data) {
 			ec_center_option.series[0].data=data.data
             ec_center_option.series[0].data.push({
@@ -106,9 +106,23 @@ function get_r2_data() {
     })
 }
 
+function get_world_data(){
+    $.ajax({
+        url:"/c2",
+        success: function(data) {
+			option.series[0].data=data.data
+            myChart.setOption(option);
+		},
+		error: function(xhr, type, errorThrown) {
+		}
+    })
+}
+
 function refreshPage(){
     window.location.reload()
 }
+
+get_world_data()
 get_c1_data()
 get_c2_data()
 get_l1_data()

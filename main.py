@@ -36,12 +36,13 @@ def get_c1_data():
     return jsonify({"confirm": int(data[0]), "confirm_now": int(data[1]), "heal": int(data[2]), "dead": int(data[3])})
 
 
-@app.route("/c2")
+@app.route("/c")
 def get_c2_data():
     res = []
     for tup in utils.get_c2_data():
         # [{'name': '上海', 'value': 318}, {'name': '云南', 'value': 162}]
         res.append({"name": tup[0], "value": int(tup[1])})
+    # print(res)
     return jsonify({"data": res})
 
 
@@ -90,7 +91,6 @@ def hello_world3():
 def hello_world2():
     name = request.values.get("name")
     pwd = request.values.get("pwd")
-
     return f'name={name},pwd={pwd}'
 
 
@@ -104,6 +104,16 @@ def hello_world1():
     <p><input type="submit" ></p>
 </form>
     """
+
+
+@app.route("/c2")
+def get_left_data():
+    res = []
+    for tup in utils.get_left_data():  # ((国家)(确诊)(死亡))
+        # [{'name': '上海', 'value': 318}, {'name': '云南', 'value': 162}]
+        res.append({"name": tup[0], "value": int(tup[1])})
+    print(res)
+    return jsonify({"data": res})
 
 
 if __name__ == '__main__':

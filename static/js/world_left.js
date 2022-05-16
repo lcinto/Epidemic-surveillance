@@ -1,5 +1,7 @@
+var mydata = [{'name': '中国', 'value': 318}, {'name': '加拿大', 'value': 162}]
+
 var myChart = echarts.init(
-    document.getElementById('left1'), 'white', {renderer: 'canvas'});
+    document.getElementById('c2'), 'white', {renderer: 'canvas'});
 
 let  nameComparison = {
     'Canada':'加拿大',
@@ -95,7 +97,7 @@ let  nameComparison = {
     'Italy':'意大利',
     'Jamaica':'牙买加',
     'Jordan':'约旦',
-    'Japan':'日本本土',
+    'Japan':'日本',
     'Kazakhstan':'哈萨克斯坦',
     'Kenya':'肯尼亚',
     'Kyrgyzstan':'吉尔吉斯斯坦',
@@ -269,7 +271,7 @@ var option =
 				areaColor:'#fff',
 				}
 			},
-            data: [], //数据
+            data: [] //数据,mydata
     }],
 };
 
