@@ -17,7 +17,7 @@ def get_conn():
     # 创建连接
     conn = pymysql.connect(host="127.0.0.1",
                            user="root",
-                           password="LLH020109LLH",
+                           password="123456",
                            db="cov",
                            charset="utf8")
     # 创建游标
@@ -48,7 +48,7 @@ def get_tencent_data():
     # print(r_det.text)
     data_det = res_det['data']['diseaseh5Shelf']
     data_his = res_his['data']
-    print(data_det)
+    #print(data_det)
     history = {}  # 历史数据
     for i in data_his["chinaDayList"]:
         if i["date"] > "04.01":
@@ -81,7 +81,7 @@ def get_tencent_data():
     details = []  # 当日详细数据
     update_time = data_det["lastUpdateTime"]
     data_country = data_det["areaTree"]  # list 之前有25个国家,现在只有中国
-    print(data_country)
+    #print(data_country)
     data_province = data_country[0]["children"]  # 中国各省
     for pro_infos in data_province:
         province = pro_infos["name"]  # 省名

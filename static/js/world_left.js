@@ -1,7 +1,7 @@
 var mydata = [{'name': '中国', 'value': 318}, {'name': '加拿大', 'value': 162}]
 
 var myChart = echarts.init(
-    document.getElementById('c2'), 'white', {renderer: 'canvas'});
+    document.getElementById('c'), 'white', {renderer: 'canvas'});
 
 let  nameComparison = {
     'Canada':'加拿大',
