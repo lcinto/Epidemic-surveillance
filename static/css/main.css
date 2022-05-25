@@ -45,7 +45,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	color: gold;
-	font-size: 20px;
+	font-size: 16px;
 	/*margin-top: 20px;*/
 }
 
@@ -172,4 +172,13 @@ body {
         width : 100vmax;
         height : 100vmin;
     }
+}
+
+#gyroContain .link01{
+    position: absolute;
+    left: 20px;
+    top:5px;
+    font-size: 20px;
+    color: blue;
+    text-decoration:none;
 }
