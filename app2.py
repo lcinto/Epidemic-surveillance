@@ -7,7 +7,7 @@ app2 = Flask(__name__)
 
 @app2.route('/')
 def hello_world():
-    return render_template("index2.html")
+    return render_template("main2.html")
 
 @app2.route("/left1")
 def get_left_data():
