@@ -72,37 +72,7 @@ def get_r2_data():
 
 
 @app.route('/')
-def hello_world():
+def main():
     return render_template("main.html")
-
-
-@app.route('/ajaxtest', methods=["post"])
-def hello_world4():
-    name = request.values.get("name")
-    return f"你好 {name}，服务器收到了ajax请求"
-
-
-@app.route('/xyz')
-def hello_world3():
-    return render_template("a.html")
-
-
-@app.route('/denglu')
-def hello_world2():
-    name = request.values.get("name")
-    pwd = request.values.get("pwd")
-    return f'name={name},pwd={pwd}'
-
-
-@app.route("/login")
-def hello_world1():
-    id = request.values.get("id")
-    return f"""
-<form action="/denglu">
-    <p>账号：<input name="name" value={id}></p>
-    <p>密码：<input name="pwd" ></p>
-    <p><input type="submit" ></p>
-</form>
-    """
 
 app.run(host="0.0.0.0", port=9999)
