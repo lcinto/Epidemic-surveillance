@@ -8,7 +8,7 @@ def get_conn():
     # 创建连接
     conn = pymysql.connect(host="127.0.0.1",
                            user="root",
-                           password="yxy1209",
+                           password="123456",
                            db="cov",
                            charset="utf8")
     # 创建游标

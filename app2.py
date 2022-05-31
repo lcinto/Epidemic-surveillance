@@ -1,6 +1,4 @@
 from flask import Flask, request, render_template, jsonify
-from jieba.analyse import extract_tags
-import string
 import utils
 
 app2 = Flask(__name__)

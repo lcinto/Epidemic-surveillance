@@ -1,8 +1,11 @@
-from flask import Flask, request, render_template, jsonify
-from jieba.analyse import extract_tags
-import string
-import utils
-import time
-import pymysql
+from flask import Flask
 
-print(utils.get_worldmap_data())
+app = Flask(__name__)
+
+@app.route("/")
+def helloWorld():
+    return "Hello World"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=7878, debug=True)
+

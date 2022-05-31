@@ -28,12 +28,25 @@ function get_world_data(){
 }
 get_world_data();                      //执行数据获取
 
+function compare(property){
+    return function(a,b){
+        var value1 = a[property];
+        var value2 = b[property];
+        return value2 - value1;
+    }
+}
+
 //确诊玫瑰图
 function get_rose_data(){
     $.ajax({
 		url:'/left2',
 		success:function(data){
+
+            console.log(data)
+
 			var data = data.data;
+		    console.log(data.sort(compare('confirm')))
+
             var countries = data;
             var count=0;          //计数，取前20个国家
              //存储前20个国家的数据（name，confirm，dead）
