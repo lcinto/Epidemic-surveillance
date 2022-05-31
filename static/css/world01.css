@@ -1,5 +1,5 @@
 body{
-	background-color:antiquewhite;
+	background-color:white;
 }
 #title{
     width: 100%;
@@ -60,4 +60,45 @@ body{
     right: 0;
 }
 
-@media screen and (orientation:portrait){html{width:100vmin;height:100vmax}body{width:100vmin;height:100vmax}#gyroContain{width:100vmax;height:100vmin;transform-origin:top left;transform:rotate(90deg) translate(0,-100vmin)}}@media screen and (orientation:landscape){html{width:100vmax;height:100vmin}body{width:100vmax;height:100vmin}#gyroContain{width:100vmax;height:100vmin}}
+/*
+此处是设置自动匹配横屏，以适应手机显示 容器使用下面定义的 id: gyroContain
+*/
+@media screen and (orientation: portrait) {
+    html{
+        width : 100vmin;
+        height : 100vmax;  /*高度比宽度大*/
+    }
+    body{
+        width : 100vmin;
+        height : 100vmax;
+    }
+    #gyroContain{
+        width : 100vmax;
+        height : 100vmin;
+        transform-origin: top left;
+        transform: rotate(90deg) translate(0,-100vmin);
+    }
+  }
+@media screen and (orientation: landscape) {
+    html{
+        width : 100vmax;
+        height : 100vmin;
+    }
+    body{
+        width : 100vmax;
+        height : 100vmin;
+    }
+    #gyroContain{
+        width : 100vmax;
+        height : 100vmin;
+    }
+}
+
+#gyroContain .link01{
+    position: absolute;
+    left: 20px;
+    top:5px;
+    font-size: 20px;
+    color: blue;
+    text-decoration:none;
+}
